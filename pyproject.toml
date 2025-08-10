@@ -625,6 +625,25 @@ intel-gpu-torch270 = [
     "torch @ https://download.pytorch.org/whl/xpu/torch-2.7.0%2Bxpu-cp312-cp312-linux_x86_64.whl#sha256=c806d44aa2ca5d225629f6fbc6c994d5deaac2d2cde449195bc8e3522ddd219a ; platform_system == 'Linux' and python_version == '3.12' and platform_machine == 'x86_64'",
     "torch @ https://download.pytorch.org/whl/xpu/torch-2.7.0%2Bxpu-cp313-cp313-linux_x86_64.whl#sha256=25d8277b7f01d42e2e014ccbab57a2692b6ec4eff8dcf894eda1b297407cf97a ; platform_system == 'Linux' and python_version == '3.13' and platform_machine == 'x86_64'",
 ]
+rocmonlytorch270 = [
+    "packaging",
+    "ninja",
+    # Use these lines if ROCm-specific xformers wheels are available
+    "xformers>=0.0.30 ; python_version>='3.9' and platform_system == 'Linux'",
+]
+rocm-torch270 = [
+    "unsloth[huggingface]",
+    "bitsandbytes>=0.45.1",
+    "unsloth[rocmonlytorch270]",
+]
+rocm-mi-torch270 = [
+    "unsloth[huggingface]",
+    "bitsandbytes>=0.45.1",
+    "unsloth[rocmonlytorch270]",
+    "packaging ; platform_system == 'Linux'",
+    "ninja ; platform_system == 'Linux'",
+    "flash-attn>=2.6.3 ; platform_system == 'Linux'",
+]
 
 [project.urls]
 homepage = "http://www.unsloth.ai"
