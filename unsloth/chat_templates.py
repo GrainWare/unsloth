@@ -1891,8 +1891,8 @@ qwen3_instruct_template = \
 # Ollama from https://ollama.com/library/qwen3/blobs/53e4ea15e8f5
 qwen3_ollama = \
 '''
-
-{{- $lastUserIdx := -1 -}}
+FROM {__FILE_LOCATION__}
+TEMPLATE """{{- $lastUserIdx := -1 -}}
 {{- range $idx, $msg := .Messages -}}
 {{- if eq $msg.Role "user" }}{{ $lastUserIdx = $idx }}{{ end -}}
 {{- end }}
@@ -1941,7 +1941,13 @@ For each function call, return a json object with function name and arguments wi
 {{ end }}
 {{- if and (ne .Role "assistant") $last }}<|im_start|>assistant
 {{ end }}
-{{- end }}
+{{- end }}"""
+
+PARAMETER temperature 0.7
+PARAMETER top_k 20
+PARAMETER top_p 0.8
+PARAMETER stop <|im_start|>
+PARAMETER stop <|im_end|>
 '''
 
 qwen3_template_eos_token = "<|im_end|>"
