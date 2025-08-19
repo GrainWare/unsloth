@@ -421,6 +421,20 @@ def _patch_trl_rl_trainers(trainer_file = "grpo_trainer"):
         RLTrainer_post += neftune_check
     pass
 
+    # Add accelerator scaler to model
+    if "model" in call_args:
+        neftune_check = \
+        "if hasattr(self, 'accelerator'):\n"\
+        "    scaler = self.accelerator.scaler\n"\
+        "    current_model = model\n"\
+        "    while hasattr(current_model, 'model'):\n"\
+        "        current_model.accelerator_scaler = scaler\n"\
+        "        current_model = current_model.model\n"\
+        "    current_model.accelerator_scaler = scaler\n"\
+        "pass\n"
+        RLTrainer_post += neftune_check
+    pass
+
     # Edit optional metrics
     other_metrics_processor = ""
     if trainer_file in RL_METRICS_CHANGES:
@@ -473,6 +487,8 @@ def _patch_trl_rl_trainers(trainer_file = "grpo_trainer"):
         "logging_steps"                 : 1,
         "max_seq_length"                : None,
         "num_generations"               : 8,
+        # "steps_per_generation"          : 1, # Otherwise defaults to ga_steps which is wrong
+        # "generation_batch_size"         : None, # Useless. If steps_per_generation set, generation_batch_size clashes
         "top_k"                         : None,
         "vllm_mode"                     : "colocate",
         "generation_kwargs"             : {},
